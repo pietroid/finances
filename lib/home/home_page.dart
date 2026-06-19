@@ -1,3 +1,4 @@
+import 'package:app_ui/app_ui.dart';
 import 'package:finances/home/widgets/category_card.dart';
 import 'package:flutter/material.dart';
 
@@ -10,9 +11,9 @@ class HomePage extends StatelessWidget {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(AppSpacing.medium),
           child: Column(
-            spacing: 10,
+            spacing: AppSpacing.small,
             children: [
               CategoryCard(category: "Básico"),
               CategoryCard(category: "Compras"),
