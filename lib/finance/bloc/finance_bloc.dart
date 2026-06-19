@@ -3,7 +3,7 @@ import 'package:meta/meta.dart';
 
 import 'package:finances/finance/models/category_budget.dart';
 import 'package:finances/finance/models/transaction.dart';
-import 'package:finances/finance/repository/in_memory_finance_repository.dart';
+import 'package:finances/finance/repository/firestore_finance_repository.dart';
 
 part 'finance_event.dart';
 part 'finance_state.dart';
@@ -18,7 +18,7 @@ class FinanceBloc extends Bloc<FinanceEvent, FinanceState> {
     on<FinanceTransactionAdded>(_onTransactionAdded);
   }
 
-  final InMemoryFinanceRepository _repository;
+  final FirestoreFinanceRepository _repository;
   final Map<String, double> limits;
   final int activeMonth;
 

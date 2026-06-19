@@ -1,13 +1,16 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:finances/finance/bloc/finance_bloc.dart';
-import 'package:finances/finance/repository/in_memory_finance_repository.dart';
+import 'package:finances/finance/repository/firestore_finance_repository.dart';
 import 'package:finances/home/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(
     RepositoryProvider(
-      create: (_) => InMemoryFinanceRepository(),
+      create: (_) => FirestoreFinanceRepository(),
       child: const MyApp(),
     ),
   );
@@ -29,7 +32,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
       home: BlocProvider(
         create: (context) => FinanceBloc(
-          repository: context.read<InMemoryFinanceRepository>(),
+          repository: context.read<FirestoreFinanceRepository>(),
           limits: _limits,
         )..add(FinanceSubscriptionRequested()),
         child: const HomePage(),
