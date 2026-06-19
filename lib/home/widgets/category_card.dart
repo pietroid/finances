@@ -1,12 +1,18 @@
 import 'package:app_ui/app_ui.dart';
+import 'package:finances/finance/models/category_budget.dart';
 import 'package:finances/home/widgets/add_transaction_bottom_sheet.dart';
 import 'package:finances/home/widgets/progress_bar.dart';
 import 'package:flutter/material.dart';
 
 class CategoryCard extends StatelessWidget {
-  const CategoryCard({super.key, required this.category});
+  const CategoryCard({super.key, required this.budget});
 
-  final String category;
+  final CategoryBudget budget;
+
+  String _formatCurrency(double value) {
+    final formatted = value.toStringAsFixed(2).replaceAll('.', ',');
+    return 'R\$ $formatted';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,11 +26,14 @@ class CategoryCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text(category, style: textTheme.headlineSmall),
+              Text(budget.category, style: textTheme.headlineSmall),
               Spacer(),
               GestureDetector(
                 onTap: () {
-                  AddTransactionBottomSheet.show(context, category: category);
+                  AddTransactionBottomSheet.show(
+                    context,
+                    category: budget.category,
+                  );
                 },
                 child: Container(
                   decoration: BoxDecoration(
@@ -40,20 +49,26 @@ class CategoryCard extends StatelessWidget {
             ],
           ),
           SizedBox(height: AppSpacing.small),
-          ProgressBar(percentage: 0.2, targetPercentage: 0.1),
+          ProgressBar(
+            percentage: budget.percentage,
+            targetPercentage: budget.targetPercentage,
+          ),
           SizedBox(height: AppSpacing.small),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("Gasto:", style: textTheme.bodySmall),
-              Text("R\$ 200,00", style: textTheme.bodySmall),
+              Text(_formatCurrency(budget.spent), style: textTheme.bodySmall),
             ],
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("Previsto:", style: textTheme.bodySmall),
-              Text("R\$ 200,00", style: textTheme.bodySmall),
+              Text(
+                _formatCurrency(budget.previsto),
+                style: textTheme.bodySmall,
+              ),
             ],
           ),
         ],
