@@ -19,7 +19,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  static const _limits = {"Básico": 2000.0, "Compras": 2000.0, "Lazer": 2000.0};
+  static const _limits = {"Básico": 2000.0, "Compras": 2000.0, "Lazer": 4000.0};
 
   @override
   Widget build(BuildContext context) {
