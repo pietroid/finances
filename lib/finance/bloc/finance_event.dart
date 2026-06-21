@@ -9,3 +9,8 @@ final class FinanceTransactionAdded extends FinanceEvent {
   FinanceTransactionAdded(this.transaction);
   final Transaction transaction;
 }
+
+final class FinanceTransactionDeleted extends FinanceEvent {
+  FinanceTransactionDeleted(this.transactionId);
+  final String transactionId;
+}

@@ -19,17 +19,15 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  static const _limits = {
-    "Básico": 2000.0,
-    "Compras": 2000.0,
-    "Lazer": 2000.0,
-  };
+  static const _limits = {"Básico": 2000.0, "Compras": 2000.0, "Lazer": 2000.0};
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
+      theme: ThemeData(
+        colorScheme: .fromSeed(seedColor: const Color.fromARGB(255, 0, 66, 7)),
+      ),
       home: BlocProvider(
         create: (context) => FinanceBloc(
           repository: context.read<FirestoreFinanceRepository>(),

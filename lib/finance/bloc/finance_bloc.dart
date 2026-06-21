@@ -13,9 +13,10 @@ class FinanceBloc extends Bloc<FinanceEvent, FinanceState> {
     required this._repository,
     required this.limits,
   }) : activeMonth = DateTime.now().month,
-       super(FinanceInitial()) {
+        super(FinanceInitial()) {
     on<FinanceSubscriptionRequested>(_onSubscriptionRequested);
     on<FinanceTransactionAdded>(_onTransactionAdded);
+    on<FinanceTransactionDeleted>(_onTransactionDeleted);
   }
 
   final FirestoreFinanceRepository _repository;
@@ -43,6 +44,13 @@ class FinanceBloc extends Bloc<FinanceEvent, FinanceState> {
     Emitter<FinanceState> emit,
   ) {
     _repository.addTransaction(event.transaction);
+  }
+
+  void _onTransactionDeleted(
+    FinanceTransactionDeleted event,
+    Emitter<FinanceState> emit,
+  ) {
+    _repository.deleteTransaction(event.transactionId);
   }
 
   FinanceLoaded _buildLoadedState(List<Transaction> transactions) {

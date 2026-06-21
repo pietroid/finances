@@ -24,6 +24,8 @@ class FirestoreFinanceRepository {
         );
       }).toList();
 
+      transactions.sort((a, b) => b.date.compareTo(a.date));
+
       _transactions.clear();
       _transactions.addAll(transactions);
       _subject.add(List.unmodifiable(_transactions));
@@ -39,5 +41,9 @@ class FirestoreFinanceRepository {
       'date': Timestamp.fromDate(transaction.date),
       'description': transaction.description,
     });
+  }
+
+  Future<void> deleteTransaction(String transactionId) async {
+    await _collection.doc(transactionId).delete();
   }
 }

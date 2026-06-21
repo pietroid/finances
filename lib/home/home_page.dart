@@ -18,6 +18,7 @@ class HomePage extends StatelessWidget {
           child: BlocBuilder<FinanceBloc, FinanceState>(
             builder: (context, state) {
               return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 spacing: AppSpacing.small,
                 children: [
                   if (state is FinanceLoaded) ...[
@@ -31,6 +32,11 @@ class HomePage extends StatelessWidget {
                       budget: _budgetFor(state.categoryBudgets, "Lazer"),
                     ),
                   ],
+                  SizedBox(height: AppSpacing.small),
+                  Text(
+                    'Transações Recentes',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
                   const _TransactionsList(),
                 ],
               );
@@ -49,6 +55,27 @@ class HomePage extends StatelessWidget {
 class _TransactionsList extends StatelessWidget {
   const _TransactionsList();
 
+  String dayOfTheWeek(int weekday) {
+    switch (weekday) {
+      case DateTime.monday:
+        return 'Seg';
+      case DateTime.tuesday:
+        return 'Ter';
+      case DateTime.wednesday:
+        return 'Qua';
+      case DateTime.thursday:
+        return 'Qui';
+      case DateTime.friday:
+        return 'Sex';
+      case DateTime.saturday:
+        return 'Sáb';
+      case DateTime.sunday:
+        return 'Dom';
+      default:
+        return '';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<FinanceBloc, FinanceState>(
@@ -65,19 +92,49 @@ class _TransactionsList extends StatelessWidget {
               itemCount: state.transactions.length,
               itemBuilder: (context, index) {
                 final transaction = state.transactions[index];
-                return ListTile(
-                  title: Text(transaction.description),
-                  subtitle: Text(transaction.category),
-                  trailing: Text(
-                    'R\$ ${transaction.value.toStringAsFixed(2).replaceAll('.', ',')}',
+                return Dismissible(
+                  key: Key(transaction.id),
+                  direction: DismissDirection.endToStart,
+                  background: Container(
+                    color: Colors.red,
+                    alignment: Alignment.centerRight,
+                    padding: const EdgeInsets.only(right: AppSpacing.medium),
+                    child: const Icon(Icons.delete, color: Colors.white),
+                  ),
+                  onDismissed: (_) {
+                    context.read<FinanceBloc>().add(
+                      FinanceTransactionDeleted(transaction.id),
+                    );
+                  },
+                  child: ListTile(
+                    leading: SizedBox(
+                      width: 40,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            transaction.date.day.toString().padLeft(2, '0'),
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                          Text(
+                            dayOfTheWeek(transaction.date.weekday),
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                    ),
+                    title: Text(transaction.description),
+                    subtitle: Text(transaction.category),
+                    trailing: Text(
+                      'R\$ ${transaction.value.toStringAsFixed(2).replaceAll('.', ',')}',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
                   ),
                 );
               },
             ),
           ),
-          FinanceError() => Center(
-            child: Text(state.message),
-          ),
+          FinanceError() => Center(child: Text(state.message)),
         };
       },
     );
